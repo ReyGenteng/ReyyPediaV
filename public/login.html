@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Atau Register - CiaaTopUp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5; 
+            --primary-dark: #4338ca;
+            --primary-light: #6366f1;
+            --secondary: #7c3aed; 
+            --light: #f9fafb;
+            --dark: #111827;
+            --gray: #6b7280;
+            --light-gray: #e5e7eb;
+            --lighter-gray: #f3f4f6;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --border-radius: 12px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            --form-label-font-size: 0.875rem;
+            --form-label-line-height: 1.5;
+            --form-label-margin-bottom: 0.5rem;
+
+            --form-control-padding-y: 0.875rem;
+            --form-control-font-size: 0.9375rem;
+            --form-control-line-height: 1.5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--lighter-gray);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            line-height: var(--form-control-line-height); 
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 1200px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            display: flex;
+            min-height: 700px;
+        }
+
+        .auth-illustration {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-illustration::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
+            background-size: 25px 25px;
+            transform: rotate(15deg);
+            opacity: 0.5;
+            animation: patternAnim 60s linear infinite;
+        }
+        @keyframes patternAnim {
+            from { background-position: 0 0; }
+            to { background-position: 500px 500px; }
+        }
+
+
+        .illustration-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 420px;
+        }
+
+        .illustration-content h2 {
+            font-size: 2.25rem;
+            margin-bottom: 1.25rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .illustration-content p {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 2.5rem;
+        }
+
+        .illustration-img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 2.5rem;
+            filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.15));
+            transform: scale(1);
+            transition: transform 0.5s ease-in-out;
+        }
+        .auth-illustration:hover .illustration-img {
+            transform: scale(1.05);
+        }
+
+        .auth-form-wrapper {
+            flex: 1;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .auth-header {
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+        .auth-header .logo-container {
+            margin-bottom: 1.5rem;
+        }
+        .auth-header .logo-container img {
+            height: 40px;
+            margin: 0 auto;
+        }
+        .auth-header .logo-container .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 0.5rem;
+        }
+
+
+        .auth-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--light-gray);
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .auth-tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray);
+            transition: var(--transition);
+            position: relative;
+            font-size: 0.95rem;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+        .auth-tab i {
+            margin-right: 0.5rem;
+        }
+
+        .auth-tab.active {
+            color: var(--primary);
+            font-weight: 600;
+            border-bottom-color: var(--primary);
+        }
+        .auth-tab:hover:not(.active) {
+            color: var(--primary-dark);
+        }
+
+
+        .auth-form {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-title {
+            font-size: 1.75rem;
+            margin-bottom: 2rem;
+            color: var(--dark);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        .form-group:focus-within .input-icon {
+            color: var(--primary);
+        }
+        .form-group:focus-within .form-label {
+            color: var(--primary);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--form-label-margin-bottom);
+            font-weight: 500;
+            color: var(--dark);
+            font-size: var(--form-label-font-size);
+            line-height: var(--form-label-line-height);
+            transition: color 0.2s ease-in-out;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: var(--form-control-padding-y) 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: var(--form-control-font-size);
+            line-height: var(--form-control-line-height);
+            transition: var(--transition);
+            background-color: var(--light);
+            color: var(--dark);
+        }
+        .form-control::placeholder {
+            color: var(--gray);
+            opacity: 0.7;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+            background-color: white;
+        }
+
+        .form-control-with-icon {
+            padding-left: 2.75rem;
+        }
+
+        .input-icon,
+        .password-toggle {
+            position: absolute;
+            color: var(--gray);
+            font-size: 0.9375rem;
+            transition: color 0.2s ease-in-out;
+            transform: translateY(-50%);
+        }
+
+        .input-icon {
+            left: 1rem;
+            pointer-events: none; 
+            top: calc( (var(--form-label-font-size) * var(--form-label-line-height)) + var(--form-label-margin-bottom) + var(--form-control-padding-y) + ( (var(--form-control-font-size) * var(--form-control-line-height)) / 2 ) );
+        }
+        
+        .password-toggle {
+            right: 1rem;
+            cursor: pointer;
+            top: calc( (var(--form-label-font-size) * var(--form-label-line-height)) + var(--form-label-margin-bottom) + var(--form-control-padding-y) + ( (var(--form-control-font-size) * var(--form-control-line-height)) / 2 ) );
+        }
+        
+        .form-group > .input-icon:first-child,
+        .form-group > .password-toggle:first-child {
+             top: 50%;
+        }
+
+
+        .password-toggle:hover {
+            color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            text-align: center;
+            margin-top: 0.75rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-sm);
+        }
+        .btn i {
+            font-size: 0.9em;
+        }
+
+        .form-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+
+        .form-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        .form-footer a i {
+            margin-right: 0.25rem;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+            color: var(--primary-dark);
+        }
+
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            display: flex; 
+            align-items: center;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0.3s ease-out;
+            visibility: hidden;
+        }
+        .alert.show {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+        }
+
+
+        .alert i {
+            margin-right: 0.75rem;
+            font-size: 1.2rem;
+        }
+
+        .alert-success {
+            background-color: hsl(var(--success-h, 145), 75%, 95%);
+            color: hsl(var(--success-h, 145), 60%, 35%);
+            border: 1px solid hsl(var(--success-h, 145), 60%, 85%);
+            --success-h: 145;
+        }
+
+        .alert-error {
+            background-color: hsl(var(--error-h, 0), 80%, 96%);
+            color: hsl(var(--error-h, 0), 70%, 45%);
+            border: 1px solid hsl(var(--error-h, 0), 70%, 88%);
+            --error-h: 0;
+        }
+
+        .alert-warning {
+            background-color: hsl(var(--warning-h, 38), 95%, 95%);
+            color: hsl(var(--warning-h, 38), 85%, 40%);
+            border: 1px solid hsl(var(--warning-h, 38), 90%, 85%);
+            --warning-h: 38;
+        }
+         .alert-info { 
+            background-color: hsl(var(--primary-hue, 245), 80%, 96%);
+            color: hsl(var(--primary-hue, 245), 70%, 45%);
+            border: 1px solid hsl(var(--primary-hue, 245), 70%, 88%);
+            --primary-hue: 245;
+        }
+
+
+        .auth-page-footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--light-gray);
+            text-align: center;
+            font-size: 0.825rem;
+            color: var(--gray);
+        }
+        .auth-page-footer a {
+            color: var(--gray);
+            text-decoration: none;
+            margin: 0 0.5rem;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        .auth-page-footer a:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+        .auth-page-footer p {
+            margin-top: 0.75rem;
+        }
+
+
+        @media (max-width: 992px) {
+            .auth-container {
+                max-width: 600px; 
+                flex-direction: column;
+            }
+            .auth-illustration {
+                padding: 2.5rem;
+                min-height: 300px; 
+            }
+             .illustration-content h2 { font-size: 1.75rem; }
+             .illustration-content p { font-size: 0.9rem; margin-bottom: 1.5rem;}
+             .illustration-img { max-height: 150px; margin-bottom: 1.5rem; }
+
+            .auth-form-wrapper {
+                padding: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+             .auth-illustration {
+                padding: 2rem;
+                min-height: 250px;
+            }
+            .auth-form-wrapper {
+                padding: 2rem;
+            }
+            .form-title { font-size: 1.5rem; }
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 0; }
+            .auth-container {
+                border-radius: 0;
+                min-height: 100vh; 
+            }
+            .auth-illustration {
+                 display: none; 
+            }
+            .auth-form-wrapper {
+                padding: 2rem 1.5rem;
+                justify-content: flex-start; 
+                min-height: 100vh;
+            }
+            .auth-header .logo-container { margin-top: 1rem; }
+            .form-title { font-size: 1.375rem; margin-bottom: 1.5rem;}
+            .auth-tabs { margin-bottom: 1.5rem; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-illustration">
+            <div class="illustration-content">
+                <picture>
+                    <source srcset="https://files.catbox.moe/fz0fd8.jpg" type="image/webp">
+                    <source srcset="/media/logo.png" type="image/png">
+                    <img src="/media/banner.png" alt="CiaaTopUp Platform Authentication" class="illustration-img">
+                </picture>
+                <h2>Selamat Datang di CiaaTopUp</h2>
+                <p>Platform H2H terdepan untuk semua kebutuhan digital Anda. Gabung sekarang!</p>
+            </div>
+        </div>
+        <div class="auth-form-wrapper">
+            <div class="auth-header">
+                <div class="logo-container">
+                    <img src="/media/logo.png" alt="CiaaTopUp Logo">
+                    <div class="logo-text">CiaaTopUp</div>
+                </div>
+                <div class="auth-tabs">
+                    <div class="auth-tab active" data-tab="login">
+                        <i class="fas fa-sign-in-alt"></i> Masuk
+                    </div>
+                    <div class="auth-tab" data-tab="register">
+                        <i class="fas fa-user-plus"></i> Daftar
+                    </div>
+                </div>
+            </div>
+
+            <div id="alertBox" class="alert">
+                <i class="fas fa-info-circle"></i>
+                <span class="alert-message"></span>
+            </div>
+
+            <form id="loginForm" class="auth-form active" method="POST" action="/auth/login">
+                <h2 class="form-title">Masuk ke Akun Anda</h2>
+                
+                <div class="form-group">
+                    <label for="loginUsernameOrEmail" class="form-label">Username atau Email</label>
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" class="form-control form-control-with-icon" id="loginUsernameOrEmail" name="usernameOrEmail" placeholder="Masukkan username atau email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword" class="form-label">Password</label>
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" class="form-control form-control-with-icon" id="loginPassword" name="password" placeholder="Masukkan password" required>
+                    <i class="fas fa-eye password-toggle" onclick="togglePassword('loginPassword', this)"></i>
+                </div>
+                
+                <div class="form-footer">
+                    <a href="/auth/forgot-password"><i class="fas fa-key"></i> Lupa password?</a>
+                </div>
+                
+                <button type="submit" class="btn">
+                    <i class="fas fa-sign-in-alt"></i> Masuk Sekarang
+                </button>
+            </form>
+
+            <form id="registerForm" class="auth-form" method="POST" action="/auth/register">
+                <h2 class="form-title">Buat Akun Baru</h2>
+                
+                <div class="form-group">
+                    <label for="registerFullname" class="form-label">Nama Lengkap</label>
+                    <i class="fas fa-user-tag input-icon"></i>
+                    <input type="text" class="form-control form-control-with-icon" id="registerFullname" name="fullname" placeholder="Masukkan nama lengkap Anda" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerUsername" class="form-label">Username</label>
+                    <i class="fas fa-at input-icon"></i>
+                    <input type="text" class="form-control form-control-with-icon" id="registerUsername" name="username" placeholder="Pilih username unik" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerEmail" class="form-label">Email</label>
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" class="form-control form-control-with-icon" id="registerEmail" name="email" placeholder="Masukkan alamat email valid" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerNomor" class="form-label">Nomor Telepon</label>
+                    <i class="fas fa-phone input-icon"></i>
+                    <input type="tel" class="form-control form-control-with-icon" id="registerNomor" name="nomor" placeholder="Contoh: 08123456789" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerPassword" class="form-label">Password</label>
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" class="form-control form-control-with-icon" id="registerPassword" name="password" placeholder="Minimal 8 karakter" required>
+                    <i class="fas fa-eye password-toggle" onclick="togglePassword('registerPassword', this)"></i>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerProfileUrl" class="form-label">URL Foto Profil (Opsional)</label>
+                    <i class="fas fa-link input-icon"></i>
+                    <input type="url" class="form-control form-control-with-icon" id="registerProfileUrl" name="profileUrl" placeholder="https://example.com/profile.jpg">
+                </div>
+                
+                <button type="submit" class="btn">
+                    <i class="fas fa-user-plus"></i> Daftar Sekarang
+                </button>
+                
+                <div class="form-footer">
+                    Sudah punya akun? <a href="#" id="switchToLoginLink"><i class="fas fa-sign-in-alt"></i> Masuk di sini</a>
+                </div>
+            </form>
+
+            <div class="auth-page-footer">
+                <a href="/terms" target="_blank">Syarat & Ketentuan</a> | 
+                <a href="/privacy" target="_blank">Kebijakan Privasi</a> | 
+                <a href="/contact" target="_blank">Dukungan</a>
+                <p>© <span id="currentYear"></span> CiaaTopUp. Hak Cipta Dilindungi.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tabs = document.querySelectorAll('.auth-tab');
+        const forms = document.querySelectorAll('.auth-form');
+        const alertBox = document.getElementById('alertBox');
+        const alertMessageEl = alertBox.querySelector('.alert-message');
+        const alertIconEl = alertBox.querySelector('i');
+        let alertTimeout;
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                forms.forEach(f => f.classList.remove('active'));
+                
+                tab.classList.add('active');
+                const tabName = tab.getAttribute('data-tab');
+                document.getElementById(`${tabName}Form`).classList.add('active');
+                
+                hideAlert();
+            });
+        });
+
+        document.getElementById('switchToLoginLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelector('.auth-tab[data-tab="login"]').click();
+        });
+
+        window.togglePassword = function(inputId, iconElement) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                iconElement.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                iconElement.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = {
+                usernameOrEmail: document.getElementById('loginUsernameOrEmail').value,
+                password: document.getElementById('loginPassword').value
+            };
+            
+            try {
+                showAlert('Mengautentikasi...', 'info');
+                const response = await fetch('/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                const data = await response.json();
+                if (data.success) {
+                    showAlert('Login berhasil! Mengalihkan...', 'success');
+                    setTimeout(() => { window.location.href = data.redirectUrl || '/dashboard'; }, 1000);
+                } else {
+                    showAlert(data.message || 'Kredensial tidak valid. Silakan coba lagi.', 'error');
+                }
+            } catch (error) {
+                showAlert('Terjadi kesalahan jaringan. Silakan coba lagi.', 'error');
+                console.error('Login error:', error);
+            }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = {
+                fullname: document.getElementById('registerFullname').value,
+                username: document.getElementById('registerUsername').value,
+                email: document.getElementById('registerEmail').value,
+                nomor: document.getElementById('registerNomor').value,
+                password: document.getElementById('registerPassword').value,
+                profileUrl: document.getElementById('registerProfileUrl').value || undefined
+            };
+
+            if (formData.password.length < 8) {
+                showAlert('Password minimal harus 8 karakter.', 'error');
+                return;
+            }
+            
+            try {
+                showAlert('Membuat akun Anda...', 'info');
+                const response = await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (response.redirected) {
+                    window.location.href = response.url; 
+                } else {
+                    const data = await response.json();
+                    if (data.error) {
+                        showAlert(data.error, 'error');
+                    } else if (data.success) {
+                         showAlert(data.message || 'Registrasi berhasil! Mengalihkan ke login...', 'success');
+                        setTimeout(() => {
+                            document.querySelector('.auth-tab[data-tab="login"]').click();
+                            document.getElementById('loginUsernameOrEmail').value = formData.email;
+                            document.getElementById('loginPassword').value = "";
+                        }, 1500);
+                    } else {
+                         showAlert('Terjadi kesalahan. Silakan coba lagi.', 'error');
+                    }
+                }
+            } catch (error) {
+                showAlert('Terjadi kesalahan saat registrasi. Silakan coba lagi.', 'error');
+                console.error('Registration error:', error);
+            }
+        });
+
+        function showAlert(message, type = 'info') {
+            clearTimeout(alertTimeout);
+            alertBox.className = 'alert'; 
+            alertBox.classList.add(`alert-${type}`);
+            alertMessageEl.textContent = message;
+            
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+            alertIconEl.className = `fas ${icons[type] || icons.info}`;
+            
+            alertBox.style.display = 'flex'; 
+            requestAnimationFrame(() => {
+                 alertBox.classList.add('show');
+            });
+
+            alertTimeout = setTimeout(hideAlert, 5000);
+        }
+
+        function hideAlert() {
+            alertBox.classList.remove('show');
+            setTimeout(() => {
+                if (!alertBox.classList.contains('show')) {
+                    alertBox.style.display = 'none';
+                }
+            }, 300); 
+        }
+
+        const yearSpan = document.getElementById('currentYear');
+        if (yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    });
+    </script>
+</body>
+</html>
