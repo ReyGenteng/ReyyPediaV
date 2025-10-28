@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Admin Dashboard - CiaaTopUp</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --sidebar-width: 260px;
+            --topbar-height: 70px;
+            --color-primary: #4e73df;
+            --color-success: #1cc88a;
+            --color-info: #36b9cc;
+            --color-warning: #f6c23e;
+            --color-danger: #e74a3b;
+            --color-secondary: #858796;
+            --color-dark: #5a5c69;
+            --color-light: #f8f9fc;
+            --color-white: #ffffff;
+            --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --border-radius: 0.75rem;
+            --box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+        }
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        body {
+            margin: 0;
+            font-family: var(--font-family);
+            background-color: var(--color-light);
+            color: var(--color-dark);
+            font-size: 1rem;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+        }
+        a {
+            text-decoration: none;
+            color: var(--color-primary);
+        }
+        .page-wrapper {
+            display: flex;
+        }
+        .sidebar {
+            width: var(--sidebar-width);
+            min-width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: var(--color-primary);
+            color: rgba(255, 255, 255, 0.8);
+            z-index: 1030;
+            transition: transform 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+        .content-wrapper {
+            width: calc(100% - var(--sidebar-width));
+            margin-left: var(--sidebar-width);
+            transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+        }
+        .topbar {
+            height: var(--topbar-height);
+            background-color: var(--color-white);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        .main-content {
+            padding: 2rem;
+        }
+        .sidebar-brand {
+            padding: 1.5rem;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--color-white);
+            text-align: center;
+        }
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .nav-item .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.9rem 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            transition: all 0.2s;
+            border-left: 4px solid transparent;
+        }
+        .nav-item .nav-link:hover {
+            color: var(--color-white);
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: var(--color-white);
+        }
+        .nav-item.logout {
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .sidebar-toggle-btn {
+            background: none;
+            border: none;
+            font-size: 1.75rem;
+            cursor: pointer;
+            color: var(--color-dark);
+            display: none;
+        }
+        .dashboard-grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+        .stat-card {
+            background-color: var(--color-white);
+            border: 1px solid #e3e6f0;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-left: 5px solid;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+        .stat-card .card-body {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .stat-card .card-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0 0 0.5rem 0;
+        }
+        .stat-card .card-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+        .stat-card .card-icon {
+            font-size: 2.75rem;
+            color: #dddfeb;
+        }
+        .stat-card.primary { border-left-color: var(--color-primary); } .stat-card.primary .card-title { color: var(--color-primary); }
+        .stat-card.success { border-left-color: var(--color-success); } .stat-card.success .card-title { color: var(--color-success); }
+        .stat-card.warning { border-left-color: var(--color-warning); } .stat-card.warning .card-title { color: var(--color-warning); }
+        .stat-card.info { border-left-color: var(--color-info); } .stat-card.info .card-title { color: var(--color-info); }
+        .stat-card.danger { border-left-color: var(--color-danger); } .stat-card.danger .card-title { color: var(--color-danger); }
+        .stat-card.secondary { border-left-color: var(--color-secondary); } .stat-card.secondary .card-title { color: var(--color-secondary); }
+        .stat-card.dark { border-left-color: var(--color-dark); } .stat-card.dark .card-title { color: var(--color-dark); }
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1029;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            z-index: 1050;
+            background: var(--color-white);
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+        }
+        .modal.active, .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal.active {
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid #dee2e6; }
+        .modal-title { margin: 0; font-size: 1.25rem; }
+        .modal-close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+        .modal-body { padding: 1.5rem; max-height: 70vh; overflow-y: auto; }
+        .modal-table { width: 100%; border-collapse: collapse; }
+        .modal-table th, .modal-table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #e3e6f0; }
+        .modal-table th { font-weight: 600; }
+        .modal-table tbody tr:hover { background-color: var(--color-light); }
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(calc(-1 * var(--sidebar-width)));
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .content-wrapper {
+                width: 100%;
+                margin-left: 0;
+            }
+            .sidebar-toggle-btn {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="modal-overlay" id="modalOverlay"></div>
+<div class="page-wrapper">
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <i class="bi bi-shield-shaded"></i> CiaaTopUp
+        </div>
+        <ul class="sidebar-nav">
+            <li class="nav-item"><a class="nav-link" href="/admin/dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="/admin/users"><i class="bi bi-people-fill"></i> Global User</a></li>
+            <li class="nav-item"><a class="nav-link" href="/admin/deposit"><i class="bi bi-wallet2"></i> Global Deposit</a></li>
+            <li class="nav-item"><a class="nav-link" href="/admin/order"><i class="bi bi-cart-check-fill"></i> Global Order</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-clipboard-data-fill"></i> Rekap Transaksi</a></li>
+            <li class="nav-item logout"><a class="nav-link" href="/auth/logout"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="content-wrapper">
+        <header class="topbar">
+            <button class="sidebar-toggle-btn" id="sidebarToggleBtn"><i class="bi bi-list"></i></button>
+            <h5 style="margin-left: 1rem; margin-bottom: 0;">Admin Panel</h5>
+        </header>
+
+        <main class="main-content">
+            <h1 class="h3" style="margin-bottom: 1.5rem;">Dashboard Overview</h1>
+            <div id="alertContainer"></div>
+            
+            <section class="dashboard-grid">
+                <article class="stat-card primary" id="saldoProviderCard"> <div class="card-body"><div class="card-info"><div class="card-title">Saldo Provider</div><div class="card-value" id="saldoProvider"><div class="spinner-border"></div></div></div><i class="bi bi-cloud-arrow-down-fill card-icon"></i></div></article>
+                <article class="stat-card success" id="totalSaldoUserCard"><div class="card-body"><div class="card-info"><div class="card-title">Total Saldo User</div><div class="card-value" id="totalSaldoUser"><div class="spinner-border"></div></div></div><i class="bi bi-wallet-fill card-icon"></i></div></article>
+                <article class="stat-card warning" id="totalCoinUserCard"><div class="card-body"><div class="card-info"><div class="card-title">Total Coin User</div><div class="card-value" id="totalCoinUser"><div class="spinner-border"></div></div></div><i class="bi bi-coin card-icon"></i></div></article>
+                <article class="stat-card info" id="totalUsersCard"><div class="card-body"><div class="card-info"><div class="card-title">Total User</div><div class="card-value" id="totalUsers"><div class="spinner-border"></div></div></div><i class="bi bi-people-fill card-icon"></i></div></article>
+                <article class="stat-card success" id="verifiedUsersCard"><div class="card-body"><div class="card-info"><div class="card-title">User Terverifikasi</div><div class="card-value" id="verifiedUsers"><div class="spinner-border"></div></div></div><i class="bi bi-person-check-fill card-icon"></i></div></article>
+                <article class="stat-card secondary" id="unverifiedUsersCard"><div class="card-body"><div class="card-info"><div class="card-title">Belum Verifikasi</div><div class="card-value" id="unverifiedUsers"><div class="spinner-border"></div></div></div><i class="bi bi-person-exclamation card-icon"></i></div></article>
+                <article class="stat-card dark" id="roleUserCard"><div class="card-body"><div class="card-info"><div class="card-title">Role: User</div><div class="card-value" id="roleUser"><div class="spinner-border"></div></div></div><i class="bi bi-person card-icon"></i></div></article>
+                <article class="stat-card primary" id="roleResellerCard"><div class="card-body"><div class="card-info"><div class="card-title">Role: Reseller</div><div class="card-value" id="roleReseller"><div class="spinner-border"></div></div></div><i class="bi bi-person-video2 card-icon"></i></div></article>
+                <article class="stat-card danger" id="roleAdminCard"><div class="card-body"><div class="card-info"><div class="card-title">Role: Admin</div><div class="card-value" id="roleAdmin"><div class="spinner-border"></div></div></div><i class="bi bi-person-gear card-icon"></i></div></article>
+                <article class="stat-card success"><div class="card-body"><div class="card-info"><div class="card-title">Total Deposit Sukses</div><div class="card-value" id="totalDepositValue"><div class="spinner-border"></div></div></div><i class="bi bi-cash-stack card-icon"></i></div></article>
+                <article class="stat-card success"><div class="card-body"><div class="card-info"><div class="card-title">Total Order Sukses</div><div class="card-value" id="totalOrderValue"><div class="spinner-border"></div></div></div><i class="bi bi-graph-up-arrow card-icon"></i></div></article>
+                <article class="stat-card secondary"><div class="card-body"><div class="card-info"><div class="card-title">Jml. Semua Deposit</div><div class="card-value" id="totalDepositCount"><div class="spinner-border"></div></div></div><i class="bi bi-list-ol card-icon"></i></div></article>
+                <article class="stat-card secondary"><div class="card-body"><div class="card-info"><div class="card-title">Jml. Semua Order</div><div class="card-value" id="totalOrderCount"><div class="spinner-border"></div></div></div><i class="bi bi-bar-chart-steps card-icon"></i></div></article>
+            </section>
+        </main>
+    </div>
+</div>
+
+<div class="modal" id="dataModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="dataModalLabel">Detail Data</h5>
+            <button type="button" class="modal-close-btn" id="modalCloseBtn"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="modal-body" id="dataModalBody"></div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    let allUsersData = [];
+    const modal = document.getElementById('dataModal');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+
+    const toggleSidebar = () => {
+        sidebar.classList.toggle('active');
+        modalOverlay.classList.toggle('active');
+    };
+    sidebarToggleBtn.addEventListener('click', toggleSidebar);
+    
+    sidebar.addEventListener('click', (event) => {
+        event.stopPropagation();
+    });
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        if (!sidebar.classList.contains('active')) {
+            modalOverlay.classList.remove('active');
+        }
+    };
+
+    modalOverlay.addEventListener('click', () => {
+        if (sidebar.classList.contains('active')) toggleSidebar();
+        if (modal.classList.contains('active')) closeModal();
+    });
+    modalCloseBtn.addEventListener('click', closeModal);
+
+    const formatRupiah = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+    const formatNumber = (num) => new Intl.NumberFormat('id-ID').format(num);
+
+    const showModalWithData = (title, data, columns) => {
+        document.getElementById('dataModalLabel').textContent = title;
+        const body = document.getElementById('dataModalBody');
+        if (!data || data.length === 0) {
+            body.innerHTML = `<p style="text-align:center; color: #858796; padding: 3rem 0;">Tidak ada data untuk ditampilkan.</p>`;
+        } else {
+            let table = `<table class="modal-table"><thead><tr>`;
+            columns.forEach(c => table += `<th>${c.label}</th>`);
+            table += `</tr></thead><tbody>`;
+            data.forEach(item => {
+                table += `<tr>`;
+                columns.forEach(c => {
+                    const value = item[c.key] || 0;
+                    table += `<td>${c.formatter ? c.formatter(value) : value}</td>`;
+                });
+                table += `</tr>`;
+            });
+            table += `</tbody></table>`;
+            body.innerHTML = table;
+        }
+        modal.classList.add('active');
+        modalOverlay.classList.add('active');
+    };
+
+    const fetchAPI = async (url) => {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`API Error ${response.status}: ${response.statusText}`);
+        return response.json();
+    };
+
+    const loadDashboard = async () => {
+        try {
+            const [providerResult, usersData] = await Promise.all([
+                fetchAPI('/admin/profile'),
+                fetchAPI('/admin/data/users')
+            ]);
+            allUsersData = usersData;
+
+            if (providerResult.success) document.getElementById('saldoProvider').textContent = formatRupiah(providerResult.profile.saldo);
+            else throw new Error('Gagal memuat saldo provider.');
+
+            const stats = allUsersData.reduce((acc, user) => {
+                acc.totalSaldoUser += user.saldo || 0;
+                acc.totalCoinUser += user.coin || 0;
+                if (user.isVerified) acc.verifiedUsers++;
+                acc.roles[user.role] = (acc.roles[user.role] || 0) + 1;
+                if (Array.isArray(user.historyDeposit)) {
+                    acc.totalDepositCount += user.historyDeposit.length;
+                    acc.totalDepositValue += user.historyDeposit.filter(d => d.status === 'success').reduce((sum, d) => sum + (d.get_balance || 0), 0);
+                }
+                if (Array.isArray(user.historyOrder)) {
+                    acc.totalOrderCount += user.historyOrder.length;
+                    acc.totalOrderValue += user.historyOrder.filter(o => o.status === 'success').reduce((sum, o) => sum + (parseFloat(o.price) || 0), 0);
+                }
+                return acc;
+            }, {
+                totalSaldoUser: 0, totalCoinUser: 0, verifiedUsers: 0, totalDepositValue: 0,
+                totalDepositCount: 0, totalOrderValue: 0, totalOrderCount: 0,
+                roles: { user: 0, reseller: 0, admin: 0 }
+            });
+
+            document.getElementById('totalSaldoUser').textContent = formatRupiah(stats.totalSaldoUser);
+            document.getElementById('totalCoinUser').textContent = formatNumber(stats.totalCoinUser);
+            document.getElementById('totalUsers').textContent = formatNumber(allUsersData.length);
+            document.getElementById('verifiedUsers').textContent = formatNumber(stats.verifiedUsers);
+            document.getElementById('unverifiedUsers').textContent = formatNumber(allUsersData.length - stats.verifiedUsers);
+            document.getElementById('roleUser').textContent = formatNumber(stats.roles.user);
+            document.getElementById('roleReseller').textContent = formatNumber(stats.roles.reseller);
+            document.getElementById('roleAdmin').textContent = formatNumber(stats.roles.admin);
+            document.getElementById('totalDepositValue').textContent = formatRupiah(stats.totalDepositValue);
+            document.getElementById('totalOrderValue').textContent = formatRupiah(stats.totalOrderValue);
+            document.getElementById('totalDepositCount').textContent = `${formatNumber(stats.totalDepositCount)} Tx`;
+            document.getElementById('totalOrderCount').textContent = `${formatNumber(stats.totalOrderCount)} Tx`;
+
+        } catch (error) {
+            console.error('Error loading dashboard:', error);
+            document.querySelectorAll('.card-value').forEach(el => el.innerHTML = `<span style="font-size: 1rem; color: var(--color-danger);">Error</span>`);
+        }
+    };
+    const commonCols = [{ key: 'fullname', label: 'Nama Lengkap' }, { key: 'username', label: 'Username' }];
+    document.getElementById('totalSaldoUserCard').addEventListener('click', () => showModalWithData('Pengguna dengan Saldo', allUsersData.filter(u => u.saldo > 0), [...commonCols, { key: 'saldo', label: 'Saldo', formatter: formatRupiah }]));
+    document.getElementById('totalCoinUserCard').addEventListener('click', () => showModalWithData('Pengguna dengan Coin', allUsersData.filter(u => u.coin > 0), [...commonCols, { key: 'coin', label: 'Coin', formatter: formatNumber }]));
+    document.getElementById('totalUsersCard').addEventListener('click', () => showModalWithData('Semua User Terdaftar', allUsersData, commonCols));
+    document.getElementById('verifiedUsersCard').addEventListener('click', () => showModalWithData('User Terverifikasi', allUsersData.filter(u => u.isVerified), commonCols));
+    document.getElementById('unverifiedUsersCard').addEventListener('click', () => showModalWithData('User Belum Verifikasi', allUsersData.filter(u => !u.isVerified), commonCols));
+    document.getElementById('roleUserCard').addEventListener('click', () => showModalWithData('User Role: "User"', allUsersData.filter(u => u.role === 'user'), commonCols));
+    document.getElementById('roleResellerCard').addEventListener('click', () => showModalWithData('User Role: "Reseller"', allUsersData.filter(u => u.role === 'reseller'), commonCols));
+    document.getElementById('roleAdminCard').addEventListener('click', () => showModalWithData('User Role: "Admin"', allUsersData.filter(u => u.role === 'admin'), commonCols));
+    
+    loadDashboard();
+});
+</script>
+</body>
+</html>
